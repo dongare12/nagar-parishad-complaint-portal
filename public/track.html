@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Complaint | Nagar Parishad</title>
+  <link rel="stylesheet" href="track.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Track Your Complaint</h1>
+    <p>Enter your Complaint ID and registered phone number.</p>
+
+    <form id="trackForm">
+      <label for="complaintId">Complaint ID</label>
+      <input id="complaintId" type="text" required
+        placeholder="Enter your Complaint ID">
+
+      <label for="phone">Registered Phone Number</label>
+      <input id="phone" type="tel" required
+        placeholder="Enter your phone number">
+
+      <button type="submit">Track Complaint</button>
+    </form>
+
+    <p id="message" role="status"></p>
+    <div id="result" hidden></div>
+
+    <a href="intropage.html">Back to Home</a>
+  </div>
+
+  <script src="track.js"></script>
+</body>
+</html>

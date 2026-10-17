@@ -1,0 +1,471 @@
+
+/* ==========================================
+   NAGAR PARISHAD COMPLAINT PORTAL
+   Light Green & White Theme
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #38965b;
+    --primary-dark: #267747;
+    --navy: #19472e;
+    --text: #30483a;
+    --muted: #718477;
+    --background: #f2f9f3;s
+    --white: #ffffff;
+    --border: #d7e9da;
+    --success: #239653;
+    --warning: #e8a23a;
+    --shadow: 0 10px 30px rgba(39, 100, 57, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   NAVIGATION BAR
+========================================== */
+
+.navbar {
+    min-height: 85px;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(120deg, #19472e, #328653);
+    color: white;
+    box-shadow: 0 4px 18px rgba(25, 71, 46, 0.15);
+}
+
+.navbar h2 {
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.navbar p {
+    margin-top: 3px;
+    color: #e0f4e5;
+    font-size: 13px;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.container {
+    width: 90%;
+    max-width: 1150px;
+    margin: 35px auto;
+}
+
+/* ==========================================
+   WELCOME SECTION
+========================================== */
+
+.welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 52px 45px;
+    border: 1px solid #cde7d1;
+    border-radius: 22px;
+    background: linear-gradient(
+        120deg,
+        #e3f5e6 0%,
+        #d1eed6 55%,
+        #f5fcf5 100%
+    );
+    box-shadow: var(--shadow);
+}
+
+.eyebrow {
+    display: inline-block;
+    padding: 7px 14px;
+    margin-bottom: 16px;
+    border-radius: 30px;
+    background: #ffffff;
+    color: #267747;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    border: 1px solid #d2ead7;
+}
+
+.welcome h1 {
+    max-width: 650px;
+    margin-bottom: 15px;
+    color: #19472e;
+    font-size: clamp(32px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1.3px;
+}
+
+.welcome > p:last-child {
+    max-width: 560px;
+    color: #587361;
+    font-size: 16px;
+}
+
+/* ==========================================
+   DASHBOARD STATISTICS
+========================================== */
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin: 28px 0 35px;
+}
+
+.stat-card {
+    min-height: 140px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-bottom: 4px solid #54b778;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(39, 100, 57, 0.04);
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.stat-card:nth-child(2) {
+    border-bottom-color: #edb64f;
+}
+
+.stat-card:nth-child(3) {
+    border-bottom-color: #469b69;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
+
+.stat-card h3 {
+    margin-bottom: 7px;
+    color: #718477;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.stat-card p {
+    color: #38965b;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.stat-card:nth-child(2) p {
+    color: #d99524;
+}
+
+.stat-card:nth-child(3) p {
+    color: #239653;
+}
+
+/* ==========================================
+   COMPLAINT FORM PANEL
+========================================== */
+
+.panel {
+  margin-top: 50px;
+    padding: 38px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.panel > h2 {
+    margin-bottom: 8px;
+    color: #19472e;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+}
+
+.panel > p {
+    margin-bottom: 27px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* ==========================================
+   FORM LABELS
+========================================== */
+
+#complaintForm label {
+    display: block;
+    margin: 19px 0 8px;
+    color: #30483a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   INPUTS, SELECT AND TEXTAREA
+========================================== */
+
+#complaintForm input,
+#complaintForm select,
+#complaintForm textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #d5e5d8;
+    border-radius: 10px;
+    background: #fbfefb;
+    color: #30483a;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+#complaintForm input,
+#complaintForm select {
+    min-height: 49px;
+}
+
+#complaintForm input::placeholder,
+#complaintForm textarea::placeholder {
+    color: #9aaa9d;
+}
+
+#complaintForm input:hover,
+#complaintForm select:hover,
+#complaintForm textarea:hover {
+    border-color: #9bcea7;
+}
+
+#complaintForm input:focus,
+#complaintForm select:focus,
+#complaintForm textarea:focus {
+    border-color: #38965b;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(56, 150, 91, 0.12);
+}
+
+#complaintForm textarea {
+    min-height: 135px;
+    resize: vertical;
+}
+
+/* ==========================================
+   SUBMIT BUTTON
+========================================== */
+
+#complaintForm button[type="submit"] {
+    width: 100%;
+    min-height: 53px;
+    margin-top: 25px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(110deg, #5f9874, #437155);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 7px 16px rgba(39, 131, 76, 0.18);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+#complaintForm button[type="submit"]:hover {
+    background: linear-gradient(110deg, #328d52, #206c3d);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(39, 131, 76, 0.25);
+}
+
+#complaintForm button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+#complaintForm button[type="submit"]:focus-visible {
+    outline: 3px solid #a9dfb5;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   FORM MESSAGE
+========================================== */
+
+#formMessage {
+    margin-top: 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer {
+    margin-top: 40px;
+    padding: 28px 20px;
+    text-align: center;
+    background: linear-gradient(120deg, #19472e, #328653);
+    color: #effff2;
+    border-radius: 15px 15px 0 0;
+}
+
+footer p {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+}
+
+/* ==========================================
+   TABLET RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 18px 5%;
+    }
+
+    .container {
+        width: 92%;
+        margin: 25px auto;
+    }
+
+    .welcome {
+        padding: 38px 28px;
+    }
+
+    .welcome h1 {
+        font-size: 35px;
+    }
+
+    .stats-container {
+        gap: 13px;
+    }
+
+    .stat-card {
+        min-height: 125px;
+        padding: 18px;
+    }
+
+    .stat-card h3 {
+        font-size: 12px;
+    }
+
+    .stat-card p {
+        font-size: 30px;
+    }
+
+    .panel {
+        padding: 28px;
+    }
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 520px) {
+    .navbar {
+        min-height: 75px;
+        padding: 15px 5%;
+    }
+
+    .navbar h2 {
+        font-size: 21px;
+    }
+
+    .navbar p {
+        font-size: 12px;
+    }
+
+    .container {
+        width: 92%;
+        margin: 20px auto;
+    }
+
+    .welcome {
+        padding: 30px 22px;
+        border-radius: 16px;
+    }
+
+    .welcome h1 {
+        font-size: 30px;
+        letter-spacing: -0.8px;
+    }
+
+    .welcome > p:last-child {
+        font-size: 14px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 13px;
+        margin: 20px 0 27px;
+    }
+
+    .stat-card {
+        min-height: auto;
+        padding: 18px 22px;
+    }
+
+    .stat-card p {
+        font-size: 28px;
+    }
+
+    .panel {
+        padding: 24px 19px;
+        border-radius: 16px;
+    }
+
+    .panel > h2 {
+        font-size: 24px;
+    }
+
+    #complaintForm input,
+    #complaintForm select,
+    #complaintForm textarea {
+        font-size: 14px;
+    }
+
+    footer {
+        padding: 24px 15px;
+    }
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,190 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== PAGE BACKGROUND ===== */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 16px;
+  background: linear-gradient(135deg, #e5f4e8, #f7fcf8, #e1f2e5);
+  color: #263b2d;
+}
+
+/* ===== LOGIN CARD ===== */
+
+.login-box {
+  width: 100%;
+  max-width: 430px;
+  padding: 38px 35px;
+  background: #ffffff;
+
+  /* Visible green border around the login box */
+  border: 2px solid #2e8b57;
+  border-radius: 20px;
+
+  /* Soft shadow for a professional look */
+  box-shadow: 0 12px 35px rgba(31, 104, 64, 0.15);
+
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* Green strip on top */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #1f6840, #79ca91);
+}
+
+/* ===== ADMIN ICON ===== */
+.login-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e8f5e9;
+  color: #1f6840;
+  font-size: 32px;
+  border: 1px solid #cce5d2;
+}
+
+/* ===== HEADING ===== */
+h1 {
+  color: #1f6840;
+  font-size: 29px;
+  font-weight: 750;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #718477;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ===== LABELS ===== */
+label {
+  display: block;
+  margin: 20px 0 8px;
+  color: #344b3a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ===== INPUT FIELDS ===== */
+input {
+  display: block;
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid #d5e5d8;
+  border-radius: 9px;
+  background: #fafffa;
+  color: #263b2d;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder {
+  color: #9aa99d;
+}
+
+input:focus {
+  background: #ffffff;
+  border-color: #2e8b57;
+  box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.12);
+}
+
+/* ===== LOGIN BUTTON ===== */
+button {
+  display: block;
+  width: 100%;
+  margin-top: 28px;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2e8b57, #1f6840);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(31, 104, 64, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(31, 104, 64, 0.23);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* ===== ERROR MESSAGE ===== */
+/* Hide empty message box */
+#message:empty {
+  display: none;
+}
+
+#message {
+  margin-top: 16px;
+  padding: 12px;
+  color: #a12622;
+  background: #fff3f1;
+  border: 1px solid #f3d0cb;
+  border-radius: 8px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* ===== BACK LINK ===== */
+a {
+  display: block;
+  width: fit-content;
+  margin: 24px auto 0;
+  color: #267447;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #174d2e;
+  text-decoration: underline;
+}
+
+/* ===== MOBILE DESIGN ===== */
+@media (max-width: 480px) {
+  .container {
+    padding: 32px 23px;
+    border-radius: 16px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  input,
+  button {
+    font-size: 16px;
+  }
+}

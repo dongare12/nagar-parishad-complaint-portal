@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nagar Parishad | Admin Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div>
+      <h1>Nagar Parishad</h1>
+      <p>Complaint Management — Admin Panel</p>
+    </div>
+    <a href="/">Citizen Portal</a>
+  </header>
+
+  <main class="admin-container">
+
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h2>Complaint Dashboard</h2>
+        <p>Monitor, review and manage citizen complaints.</p>
+      </div>
+      <button type="button" id="refreshBtn">Refresh Data</button>
+    </section>
+
+    <section class="stats-container">
+      <article class="stat-card">
+        <h3>Total Complaints</h3>
+        <p id="totalCount">0</p>
+      </article>
+      <article class="stat-card">
+        <h3>Pending</h3>
+        <p id="pendingCount">0</p>
+      </article>
+      <article class="stat-card">
+        <h3>In Progress</h3>
+        <p id="progressCount">0</p>
+      </article>
+      <article class="stat-card">
+        <h3>Resolved</h3>
+        <p id="resolvedCount">0</p>
+      </article>
+      <article class="stat-card">
+        <h3>Rejected</h3>
+        <p id="rejectedCount">0</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Find Complaints</h2>
+
+      <div class="filters">
+        <div>
+          <label for="searchInput">Search</label>
+          <input id="searchInput" type="search"
+            placeholder="Name, location or complaint ID">
+        </div>
+
+        <div>
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="All">All statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter">
+            <option value="All">All categories</option>
+            <option value="Street Light">Street Light</option>
+            <option value="Water Supply">Water Supply</option>
+            <option value="Road">Road</option>
+            <option value="Garbage">Garbage</option>
+            <option value="Drainage">Drainage</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <p id="pageMessage" role="status" aria-live="polite"></p>
+      <p id="resultsCount">Loading complaints...</p>
+      <div id="complaintsList" class="complaints-grid"></div>
+    </section>
+
+    <footer>
+      Nagar Parishad Complaint Management System
+    </footer>
+
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
