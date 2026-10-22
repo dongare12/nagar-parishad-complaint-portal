@@ -10,6 +10,45 @@ const refreshBtn = document.getElementById("refreshBtn");
 
 let allComplaints = [];
 
+
+async function loadComplaints() {
+  try {
+    complaintsList.textContent = "Loading complaints...";
+
+    const response = await fetch("/complaints", {
+      credentials: "same-origin"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log("Complaints API response:", data);
+
+    if (Array.isArray(data)) {
+      allComplaints = data;
+    } else if (Array.isArray(data.complaints)) {
+      allComplaints = data.complaints;
+    } else {
+      throw new Error("Unexpected complaints API response format.");
+    }
+
+    updateStatistics();
+    displayComplaints();
+
+    pageMessage.textContent = "";
+
+  } catch (error) {
+    console.error("Error loading complaints:", error);
+
+    complaintsList.textContent = "Unable to load complaints.";
+    pageMessage.textContent = error.message;
+  }
+}
+
+
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;",
@@ -65,7 +104,7 @@ function displayComplaints() {
     return;
   }
 
-  complaintsList.innerHTML = filtered.map(c => `
+ complaintsList.innerHTML = filtered.map(c => `
     <article class="complaint-card">
       <h3>${escapeHTML(c.category)} Complaint</h3>
 
@@ -118,6 +157,37 @@ function displayComplaints() {
       <label for="resolution-${escapeHTML(c._id)}">Resolution Details</label>
       <textarea id="resolution-${escapeHTML(c._id)}"
         placeholder="Describe the work completed...">${escapeHTML(c.resolution)}</textarea>
+      
+<label for="afterImage-${escapeHTML(c._id)}">
+  After-Resolution Photo
+</label>
+
+<input
+  type="file"
+  id="afterImage-${escapeHTML(c._id)}"
+  class="after-image-input"
+  accept="image/jpeg,image/png,image/webp"
+/>
+
+${
+  c.afterImage && c.afterImage.url
+    ? `
+      <div class="complaint-photo">
+        <strong>After-Resolution Photo:</strong>
+        <a href="${escapeHTML(c.afterImage.url)}"
+           target="_blank"
+           rel="noopener noreferrer">
+          <img
+            src="${escapeHTML(c.afterImage.url)}"
+            alt="After-resolution repair"
+            class="complaint-image"
+          >
+        </a>
+      </div>
+    `
+    : `<p><strong>After-Resolution Photo:</strong> Not uploaded yet.</p>`
+}
+
 
       <button type="button" class="save-complaint-btn"
         data-id="${escapeHTML(c._id)}">Save Changes</button>
@@ -131,27 +201,6 @@ function displayComplaints() {
 
     </article>
   `).join("");
-}
-
-async function loadComplaints() {
-  complaintsList.textContent = "Loading complaints...";
-  pageMessage.textContent = "";
-
-  try {
-    const response = await fetch("/complaints");
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || "Unable to load complaints.");
-    }
-
-    allComplaints = data.complaints || [];
-    updateStatistics();
-    displayComplaints();
-  } catch (error) {
-    complaintsList.textContent = "Error loading complaints.";
-    pageMessage.textContent = error.message;
-  }
 }
 
 
@@ -175,69 +224,94 @@ complaintsList.addEventListener("click", async (event) => {
     saveButton.disabled = true;
     saveButton.textContent = "Saving...";
 
-    try {
-      const response = await fetch(
-        `/complaints/${encodeURIComponent(id)}/status`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status, remarks, resolution })
-        }
-      );
+    // try {
+    //   const response = await fetch(
+    //     `/complaints/${encodeURIComponent(id)}/status`,
+    //     {
+    //       method: "PATCH",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ status, remarks, resolution })
+    //     }
+    //   );
 
-      const data = await response.json();
+      
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Unable to save complaint.");
-      }
+try {
+  const formData = new FormData();
 
-      pageMessage.textContent = "Complaint updated successfully.";
-      await loadComplaints();
+  formData.append("status", status);
+  formData.append("remarks", remarks || "");
+  formData.append("resolution", resolution || "");
 
-    } catch (error) {
-      pageMessage.textContent = "Error: " + error.message;
-      saveButton.disabled = false;
-      saveButton.textContent = "Save Changes";
+
+const imageInput = document.getElementById(`afterImage-${id}`);
+
+  if (imageInput && imageInput.files.length > 0) {
+  formData.append("afterImage", imageInput.files[0]);
+}
+
+  const response = await fetch(
+    `/complaints/${encodeURIComponent(id)}/status`,
+    {
+      method: "PATCH",
+      body: formData
     }
+  );
 
-    return;
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Unable to save complaint.");
   }
 
-  // Delete complaint
-  if (deleteButton) {
-    const id = deleteButton.dataset.id;
+  pageMessage.textContent = "Complaint updated successfully.";
+  await loadComplaints();
 
-    const confirmed = confirm(
-      "Are you sure you want to delete this complaint? This action cannot be undone."
+} catch (error) {
+  pageMessage.textContent = "Error: " + error.message;
+  saveButton.disabled = false;
+  saveButton.textContent = "Save Changes";
+}
+
+return;
+}
+
+// Delete complaint
+if (deleteButton) {
+  const id = deleteButton.dataset.id;
+
+  const confirmed = confirm(
+    "Are you sure you want to delete this complaint? This action cannot be undone."
+  );
+
+  if (!confirmed) return;
+
+  deleteButton.disabled = true;
+  deleteButton.textContent = "Deleting...";
+
+  try {
+    const response = await fetch(
+      `/complaints/${encodeURIComponent(id)}`,
+      { method: "DELETE" }
     );
 
-    if (!confirmed) return;
+    const data = await response.json();
 
-    deleteButton.disabled = true;
-    deleteButton.textContent = "Deleting...";
-
-    try {
-      const response = await fetch(
-        `/complaints/${encodeURIComponent(id)}`,
-        { method: "DELETE" }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Unable to delete complaint.");
-      }
-
-      pageMessage.textContent = "Complaint deleted successfully.";
-      await loadComplaints();
-
-    } catch (error) {
-      pageMessage.textContent = "Error: " + error.message;
-      deleteButton.disabled = false;
-      deleteButton.textContent = "Delete Complaint";
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Unable to delete complaint.");
     }
+
+    pageMessage.textContent = "Complaint deleted successfully.";
+    await loadComplaints();
+
+  } catch (error) {
+    pageMessage.textContent = "Error: " + error.message;
+    deleteButton.disabled = false;
+    deleteButton.textContent = "Delete Complaint";
   }
+}
 });
+
 
 
 searchInput.addEventListener("input", displayComplaints);

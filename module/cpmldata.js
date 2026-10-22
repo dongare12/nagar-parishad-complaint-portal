@@ -72,6 +72,17 @@ updatedBy: {
       enum: ["Pending", "In Progress", "Resolved", "Rejected"],
       default: "Pending",
     },
+
+    afterImage: {
+  url: {
+    type: String,
+    default: ""
+  },
+  filename: {
+    type: String,
+    default: ""
+  }
+},
   },
   { timestamps: true }
 );

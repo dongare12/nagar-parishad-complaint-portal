@@ -162,21 +162,19 @@ app.post("/complaints", (req, res) => {
 
 
 
-// Connect to MongoDB Atlas
+
 require("dotenv").config();
 
-
 async function main() {
-  await mongoose.connect(process.env.ATLASDB_URL);
-  console.log("Connected to MongoDB Atlas");
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("Connected to local MongoDB successfully!");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+  }
 }
 
-main().catch((err) => {
-  console.error("MongoDB connection failed:", err.message);
-});
-
-
-
+main();
 
 // Register a new complaint
 app.post("/complaints", async (req, res) => {
@@ -289,6 +287,7 @@ app.get("/complaints", async (req, res) => {
 
 
 
+
 app.post("/complaints/track", async (req, res) => {
   try {
     const { complaintId, phone } = req.body;
@@ -311,15 +310,18 @@ app.post("/complaints/track", async (req, res) => {
       _id: complaintId,
       phone: phone.trim()
     }).select(
-      "category status location remarks resolution updatedAt"
+      "category status location remarks resolution updatedAt image afterImage"
     );
 
     if (!complaint) {
       return res.status(404).json({
         success: false,
-        message: "Complaint not found. Check your complaint ID and phone number."
+        message:
+          "Complaint not found. Check your complaint ID and phone number."
       });
     }
+
+    const isResolved = complaint.status === "Resolved";
 
     return res.status(200).json({
       success: true,
@@ -330,7 +332,11 @@ app.post("/complaints/track", async (req, res) => {
         location: complaint.location,
         remarks: complaint.remarks || "",
         resolution: complaint.resolution || "",
-        updatedAt: complaint.updatedAt
+        updatedAt: complaint.updatedAt,
+
+        // Return photos only for resolved complaints
+        image: isResolved ? complaint.image || null : null,
+        afterImage: isResolved ? complaint.afterImage || null : null
       }
     });
 
@@ -345,43 +351,38 @@ app.post("/complaints/track", async (req, res) => {
 });
 
 
-app.patch("/complaints/:id/status", async (req, res) => {
-  try {
-    const { status, remarks, resolution } = req.body;
 
-    const allowedStatuses = [
-      "Pending",
-      "In Progress",
-      "Resolved",
-      "Rejected"
-    ];
-
-    // Validate status
-    if (!allowedStatuses.includes(status)) {
+app.patch("/complaints/:id/status", (req, res) => {
+  // Accept an optional after-resolution image
+  upload.single("afterImage")(req, res, async (uploadError) => {
+    if (uploadError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid complaint status."
+        message: uploadError.message
       });
     }
 
-    // Prepare fields to update
-    const updateData = {
-      status: status
-    };
+    try {
+      console.log("Uploaded file:", req.file);
+      const { status, remarks, resolution } = req.body;
 
-    if (typeof remarks === "string") {
-      updateData.remarks = remarks.trim();
-    }
+      const allowedStatuses = [
+        "Pending",
+        "In Progress",
+        "Resolved",
+        "Rejected"
+      ];
 
-    if (typeof resolution === "string") {
-      updateData.resolution = resolution.trim();
-    }
+      if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid complaint status."
+        });
+      }
 
-    // Record resolution time
-    if (status === "Resolved") {
       if (
-        typeof resolution === "string" &&
-        resolution.trim() === ""
+        status === "Resolved" &&
+        (!resolution || resolution.trim() === "")
       ) {
         return res.status(400).json({
           success: false,
@@ -389,43 +390,68 @@ app.patch("/complaints/:id/status", async (req, res) => {
         });
       }
 
-      updateData.resolvedAt = new Date();
-    } else {
-      updateData.resolvedAt = null;
-    }
+      const updateData = {
+        status,
+        remarks:
+          typeof remarks === "string" ? remarks.trim() : undefined,
+        resolution:
+          typeof resolution === "string" ? resolution.trim() : undefined
+      };
 
-    // Update complaint in MongoDB
-    const complaint = await Complaint.findByIdAndUpdate(
-      req.params.id,
-      { $set: updateData },
-      {
-        new: true,
-        runValidators: true
+      if (status === "Resolved") {
+        updateData.resolvedAt = new Date();
+      } else {
+        updateData.resolvedAt = null;
       }
-    );
 
-    if (!complaint) {
-      return res.status(404).json({
+      // Save the after-resolution image separately.
+      if (req.file) {
+        updateData.afterImage = {
+          url: "/uploads/" + req.file.filename,
+          filename: req.file.filename
+        };
+      }
+
+      // Remove undefined fields so existing values aren't overwritten.
+      Object.keys(updateData).forEach((key) => {
+        if (updateData[key] === undefined) {
+          delete updateData[key];
+        }
+      });
+
+      const complaint = await Complaint.findByIdAndUpdate(
+        req.params.id,
+        { $set: updateData },
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+
+      if (!complaint) {
+        return res.status(404).json({
+          success: false,
+          message: "Complaint not found."
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Complaint updated successfully!",
+        complaint
+      });
+    } catch (error) {
+      console.error("Update complaint error:", error);
+
+      return res.status(400).json({
         success: false,
-        message: "Complaint not found."
+        message: error.message
       });
     }
-
-    res.status(200).json({
-      success: true,
-      message: "Complaint updated successfully!",
-      complaint: complaint
-    });
-
-  } catch (error) {
-    console.error("Update complaint error:", error);
-
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
+  });
 });
+
+
 
 
 
@@ -459,7 +485,11 @@ app.delete("/complaints/:id", async (req, res) => {
 
 
 
+const PORT = process.env.PORT || 8080;
 
-app.listen("8080",() => {
-    console.log("server is listening to port 8080 ");
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
 });
+// app.listen("8080",() => {
+//     console.log("server is listening to port 8080 ");
+// });

@@ -30,51 +30,40 @@
     </form>
   </div>
 
-  <script>
-    document.getElementById("loginForm").addEventListener(
-      "submit",
-      function (event) {
-        event.preventDefault();
+ 
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
+  event.preventDefault();
 
-        document.getElementById("message").textContent =
-          "Login backend is not connected yet.";
-      }
-    );
+  const message = document.getElementById("message");
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
 
-    document.getElementById("loginForm").addEventListener(
-  "submit",
-  async function (event) {
-    event.preventDefault();
+  message.textContent = "Checking login...";
 
-    const message = document.getElementById("message");
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
+  try {
+    const response = await fetch("/admin/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({ username, password })
+    });
 
-    message.textContent = "Checking login...";
+    const result = await response.json();
 
-    try {
-      const response = await fetch("/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "same-origin",
-        body: JSON.stringify({ username, password })
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        message.textContent = result.message || "Login failed.";
-        return;
-      }
-
-      window.location.href = "/admin.html";
-    } catch (error) {
-      message.textContent = "Cannot connect to the server.";
+    if (!response.ok || !result.success) {
+      message.textContent = result.message || "Login failed.";
+      return;
     }
+
+    window.location.href = "/admin.html";
+  } catch (error) {
+    message.textContent = "Cannot connect to the server.";
   }
-);
-  </script>
+});
+</script>
+
 </body>
 </html>

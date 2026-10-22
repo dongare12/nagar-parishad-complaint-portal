@@ -3,37 +3,35 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Admin = require("./models/Admin");
 
-
-
-
 async function createAdmin() {
   try {
     await mongoose.connect(
       "mongodb://127.0.0.1:27017/nagarparishad"
     );
 
-    // Change these to your preferred credentials
     const username = "counciladmin";
     const password = "MyNewAdmin@2026";
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await Admin.findOneAndUpdate(
-      {},
+    const admin = await Admin.findOneAndUpdate(
+      { username: username },
       {
-        username,
-        password: hashedPassword
+        $set: {
+          username: username,
+          password: hashedPassword
+        }
       },
       {
         upsert: true,
-        new: true,
+        returnDocument: "after",
         runValidators: true
       }
     );
 
-    console.log("Admin credentials saved successfully.");
-    console.log("Username:", username);
-    console.log("Password:", password);
+    console.log("Admin account created or updated!");
+    console.log("Username:", admin.username);
+    console.log("You can now try logging in.");
   } catch (error) {
     console.error("Error:", error.message);
   } finally {

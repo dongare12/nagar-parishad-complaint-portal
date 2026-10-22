@@ -16,7 +16,7 @@ async function sendComplaintEmail({
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-         from: "notifications@example.com",
+         from: "complaintregistrationportal.online",
         to: [email],
         subject: "Your complaint has been registered",
         html: `
