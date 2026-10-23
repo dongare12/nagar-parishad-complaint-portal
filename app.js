@@ -34,7 +34,7 @@ app.use(session({
   }
 }));
 
-const Admin = require("./models/Admin");
+const admin = require("./models/admin");
 
 const Complaint = require("./module/cpmldata");
 
