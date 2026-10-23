@@ -24,7 +24,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 app.use(session({
-  secret: process.env.SESSION_SECRET || "nagar-parishad-dev-secret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
